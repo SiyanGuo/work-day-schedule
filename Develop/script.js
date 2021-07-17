@@ -54,23 +54,29 @@ $(".time-block").each(function (index, el) {
 var saveSchedulesHandler = function () {
     var id = JSON.parse($(this).attr("id"));
     console.log("event - id", id);
-    // $("textarea[id=" + id + "]").change(function () {
-    //     alert("changed");
-    // })
     var scheduleInput = $(this).siblings(".description").val();
     console.log(schedules);
+    var isEdit = false;
+
+    //updating edited schedule and skip creating a new schedule Obj
     $.each(schedules, function (index, val) {
         if (val.id === id) {
-            val.name = scheduleInput;
+            // var schedule = { id: id, name: val.scheduleInput };
+            val.name = scheduleInput
+            localStorage.setItem("schedules", JSON.stringify(schedules));
+            loadSchedules();
+            isEdit = true;
             return false;
         }
     })
-    var schedule = { id: id, name: scheduleInput };
-    schedules.push(schedule);
-    console.log(schedule);
-    localStorage.setItem("schedules", JSON.stringify(schedules));
-    loadSchedules();
-
+    //create a new schedule obj if it's not saved
+    if (!isEdit) {
+        var schedule = { id: id, name: scheduleInput };
+        schedules.push(schedule);
+        console.log(schedule);
+        localStorage.setItem("schedules", JSON.stringify(schedules));
+        loadSchedules();
+    }
 }
 
 //load schedules on the page
@@ -85,9 +91,10 @@ var loadSchedules = function () {
     console.log(schedules);
 }
 
+//load the page when refresh
 loadSchedules();
 
 $(".time-block").on("click", ".saveBtn", saveSchedulesHandler);
 
 //reload the page every 30 mins
-// setInterval(loadSchedules(), (1000 * 60) * 30);
+setInterval(loadSchedules(), (1000 * 60) * 30);
