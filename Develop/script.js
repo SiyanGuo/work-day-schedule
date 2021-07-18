@@ -58,19 +58,40 @@ var saveSchedulesHandler = function () {
     //     alert("changed");
     // })
     var scheduleInput = $(this).siblings(".description").val();
-    console.log(schedules);
-    $.each(schedules, function (index, val) {
-        if (val.id === id) {
-            val.name = scheduleInput;
-            return false;
-        }
-    })
-    var schedule = { id: id, name: scheduleInput };
-    schedules.push(schedule);
-    console.log(schedule);
+    // console.log(schedules);
+    // $.each(schedules, function (index, val) {
+    //     if (val.id === id) {
+    //         val.name = scheduleInput;
+    //         return false;
+    //     }
+    // })
+
+
+    // var random = schedules.find((schedule, index) => {
+    //     // console.log({ schedule, index });
+    //     if (schedule.id === id) {
+    //         console.log({ schedule, index });
+    //         return { index:123, test: schedule }
+    //     }
+    // });
+
+    // console.log("random", { random });
+
+    const scheduleIndex = schedules.findIndex(schedule => schedule.id === id);
+    console.log(scheduleIndex);
+    if (scheduleIndex >= 0) {
+        // const updatedSchedule = { ...random, name: scheduleInput };
+        schedules[scheduleIndex].name = scheduleInput;
+        // schedules.push(updatedSchedule);
+    } else {
+        var schedule = {
+            id: id,
+            name: scheduleInput
+        };
+        schedules.push(schedule);
+    }
     localStorage.setItem("schedules", JSON.stringify(schedules));
     loadSchedules();
-
 }
 
 //load schedules on the page
@@ -79,6 +100,8 @@ var loadSchedules = function () {
     if (!schedules) {
         schedules = [];
     }
+
+    // schedules = JSON.parse(localStorage.getItem("schedules")) || [];
     $.each(schedules, function (index, val) {
         $("textarea[id=" + val.id + "]").val(val.name)
     })
