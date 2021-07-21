@@ -37,11 +37,11 @@ $(".time-block").each(function (index, el) {
     var workTime = $(this).find("p").text().trim();
     workTime = moment(workTime, "h:mma")
     var diff = moment().diff(workTime, "minutes");
-
+    console.log(diff);
     if (diff < 0) {
         $(this).find("textarea").addClass("future");
         console.log("future");
-    } else if (0 < diff && diff < 60) {
+    } else if (0 <= diff && diff <= 60) {
         $(this).find("textarea").addClass("present");
         console.log("present");
     } else {
@@ -53,36 +53,13 @@ $(".time-block").each(function (index, el) {
 // save schedules in an array and localStorage
 var saveSchedulesHandler = function () {
     var id = JSON.parse($(this).attr("id"));
-    console.log("event - id", id);
-    // $("textarea[id=" + id + "]").change(function () {
-    //     alert("changed");
-    // })
+
     var scheduleInput = $(this).siblings(".description").val();
-    // console.log(schedules);
-    // $.each(schedules, function (index, val) {
-    //     if (val.id === id) {
-    //         val.name = scheduleInput;
-    //         return false;
-    //     }
-    // })
-
-
-    // var random = schedules.find((schedule, index) => {
-    //     // console.log({ schedule, index });
-    //     if (schedule.id === id) {
-    //         console.log({ schedule, index });
-    //         return { index:123, test: schedule }
-    //     }
-    // });
-
-    // console.log("random", { random });
 
     const scheduleIndex = schedules.findIndex(schedule => schedule.id === id);
     console.log(scheduleIndex);
     if (scheduleIndex >= 0) {
-        // const updatedSchedule = { ...random, name: scheduleInput };
         schedules[scheduleIndex].name = scheduleInput;
-        // schedules.push(updatedSchedule);
     } else {
         var schedule = {
             id: id,
@@ -113,4 +90,4 @@ loadSchedules();
 $(".time-block").on("click", ".saveBtn", saveSchedulesHandler);
 
 //reload the page every 30 mins
-// setInterval(loadSchedules(), (1000 * 60) * 30);
+setInterval(loadSchedules(), (1000 * 60) * 30);
