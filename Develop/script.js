@@ -37,11 +37,11 @@ $(".time-block").each(function (index, el) {
     var workTime = $(this).find("p").text().trim();
     workTime = moment(workTime, "h:mma")
     var diff = moment().diff(workTime, "minutes");
-
+    console.log(diff);
     if (diff < 0) {
         $(this).find("textarea").addClass("future");
         console.log("future");
-    } else if (0 < diff && diff < 60) {
+    } else if (0 <= diff && diff < 60) {
         $(this).find("textarea").addClass("present");
         console.log("present");
     } else {
@@ -69,9 +69,12 @@ var saveSchedulesHandler = function () {
             return false;
         }
     })
-    //create a new schedule obj if it's not saved
+    //create a new schedule obj if it has not been saved in localStorage
     if (!isEdit) {
-        var schedule = { id: id, name: scheduleInput };
+        var schedule = {
+            id: id,
+            name: scheduleInput
+        };
         schedules.push(schedule);
         console.log(schedule);
         localStorage.setItem("schedules", JSON.stringify(schedules));
@@ -94,6 +97,7 @@ var loadSchedules = function () {
 //load the page when refresh
 loadSchedules();
 
+//listening to "click" event
 $(".time-block").on("click", ".saveBtn", saveSchedulesHandler);
 
 //reload the page every 30 mins
