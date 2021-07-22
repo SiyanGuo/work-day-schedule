@@ -37,31 +37,25 @@ $(".time-block").each(function (index, el) {
     var workTime = $(this).find("p").text().trim();
     workTime = moment(workTime, "h:mma")
     var diff = moment().diff(workTime, "minutes");
-    console.log(diff);
+    
     if (diff < 0) {
         $(this).find("textarea").addClass("future");
-        console.log("future");
     } else if (0 <= diff && diff < 60) {
         $(this).find("textarea").addClass("present");
-        console.log("present");
     } else {
         $(this).find("textarea").addClass("past");
-        console.log("past");
     }
 });
 
 // save schedules in an array and localStorage
 var saveSchedulesHandler = function () {
     var id = JSON.parse($(this).attr("id"));
-    console.log("event - id", id);
     var scheduleInput = $(this).siblings(".description").val();
-    console.log(schedules);
     var isEdit = false;
 
     //updating edited schedule and skip creating a new schedule Obj
     $.each(schedules, function (index, val) {
         if (val.id === id) {
-            // var schedule = { id: id, name: val.scheduleInput };
             val.name = scheduleInput
             localStorage.setItem("schedules", JSON.stringify(schedules));
             loadSchedules();
@@ -76,7 +70,6 @@ var saveSchedulesHandler = function () {
             name: scheduleInput
         };
         schedules.push(schedule);
-        console.log(schedule);
         localStorage.setItem("schedules", JSON.stringify(schedules));
         loadSchedules();
     }
@@ -91,7 +84,6 @@ var loadSchedules = function () {
     $.each(schedules, function (index, val) {
         $("textarea[id=" + val.id + "]").val(val.name)
     })
-    console.log(schedules);
 }
 
 //load the page when refresh
